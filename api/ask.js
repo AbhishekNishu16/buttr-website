@@ -77,7 +77,7 @@ export async function answer({ messages, topic, calc }) {
   const context = [
     topic ? `The visitor is currently exploring "${LABELS[topic]}". Keep answers about that topic unless they clearly change subject.` : '',
     topic === 'me' && c ? `The visualizer currently shows: age ${+c.age || 0}, monthly take-home ₹${+c.income || 0}, total wealth ₹${+c.saved || 0}.` : ''
-  ].join(' ');
+  ].filter(Boolean).join(' ');
   const base = PROMPT.replace('{{ICONS}}', ICONS.join(', ')).replace('{{CONTEXT}}', '') + '\n\n' + FORMAT_NOTE + '\n\nReference facts about Buttr:\n' + KNOWLEDGE;
   const ctx = context || 'The visitor is on the home screen.';
   const cached = [{ type: 'text', text: base, cache_control: { type: 'ephemeral' } }, { type: 'text', text: ctx }];

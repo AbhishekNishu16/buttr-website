@@ -15,6 +15,7 @@ http.createServer(async (req, res) => {
     req.body = raw;
     res.status = code => { res.statusCode = code; return res; };
     res.json = obj => { res.setHeader('Content-Type', 'application/json'); res.end(JSON.stringify(obj)); };
+    req.query = Object.fromEntries(url.searchParams);
     return api[url.pathname](req, res);
   }
   const path = normalize(join(root, url.pathname === '/' ? 'index.html' : decodeURIComponent(url.pathname)));

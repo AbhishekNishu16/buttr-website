@@ -2,6 +2,7 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { MODEL, keyInfo, claude, describeError } from './_claude.js';
+import { answer } from './ask.js';
 
 export default async function handler(req, res) {
   const out = { model: MODEL, key: keyInfo() };
@@ -29,6 +30,11 @@ export default async function handler(req, res) {
     out.structuredCall = 'ok: ' + ((r.content.find(b => b.type === 'text') || {}).text || '').trim().slice(0, 80);
   } catch (e) {
     out.structuredCall = 'failed: ' + describeError(e);
+  }
+  if (req.query && req.query.q) {
+    const t0 = Date.now();
+    const a = await answer({ messages: [{ role: 'user', content: String(req.query.q).slice(0, 300) }], topic: null, calc: null });
+    out.question = { seconds: ((Date.now() - t0) / 1000).toFixed(1), steps: a.log, reply: a.result.reply, visual: a.result.visual ? a.result.visual.kind : null };
   }
   return res.status(200).json(out);
 }

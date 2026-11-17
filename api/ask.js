@@ -70,6 +70,58 @@ function limited(ip) {
 
 const FALLBACK = { reply: "I couldn't think that through just now. Try one of the questions here, or ask a wealth partner directly.", open: null, visual: null, nudge: 'what', calc: null };
 
+// Answers one conversation. Returns the page's shape plus a log of what happened at each step.
+export async function answer({ messages, topic, calc }) {
+  const log = [];
+  const c = calc && typeof calc === 'object' ? calc : null;
+  const context = [
+    topic ? `The visitor is currently exploring "${LABELS[topic]}". Keep answers about that topic unless they clearly change subject.` : '',
+    topic === 'me' && c ? `The visualizer currently shows: age ${+c.age || 0}, monthly take-home ₹${+c.income || 0}, total wealth ₹${+c.saved || 0}.` : ''
+  ].join(' ');
+  const base = PROMPT.replace('{{ICONS}}', ICONS.join(', ')).replace('{{CONTEXT}}', '') + '\n\n' + FORMAT_NOTE + '\n\nReference facts about Buttr:\n' + KNOWLEDGE;
+  const ctx = context || 'The visitor is on the home screen.';
+  const cached = [{ type: 'text', text: base, cache_control: { type: 'ephemeral' } }, { type: 'text', text: ctx }];
+  const plain = base + '\n\n' + ctx;
+  const textOf = r => (r.content.find(b => b.type === 'text') || {}).text || '';
+  const readJson = t => { const a = t.indexOf('{'), b = t.lastIndexOf('}'); if (a < 0) return { reply: t.trim() }; try { return JSON.parse(t.slice(a, b + 1)); } catch (e) { return { reply: t.slice(0, a).trim() || t.trim() }; } };
+
+  const attempts = [
+    ['structured', () => claude().messages.create({ model: MODEL, max_tokens: 1200, system: cached, messages, output_config: { format: { type: 'json_schema', schema: SCHEMA } } }), t => JSON.parse(t)],
+    ['plain', () => claude().messages.create({ model: MODEL, max_tokens: 1200, system: cached, messages }), readJson],
+    ['plain, no cache', () => claude().messages.create({ model: MODEL, max_tokens: 1200, system: plain, messages }), readJson]
+  ];
+  let out = null;
+  for (const [name, call, parse] of attempts) {
+    const t0 = Date.now();
+    try {
+      out = parse(textOf(await call()));
+      log.push(name + ': ok in ' + (Date.now() - t0) + ' ms');
+      break;
+    } catch (e) {
+      log.push(name + ': failed in ' + (Date.now() - t0) + ' ms: ' + describeError(e));
+      if (e && (e.status === 401 || e.status === 403)) break;
+    }
+  }
+  if (!out || !out.reply) return { result: FALLBACK, log };
+  const none = v => (v && v !== 'none' ? v : null);
+  const v = out.visual || {};
+  const hasVisual = v.kind && v.kind !== 'none' && ((v.items || []).length || (v.columns || []).length);
+  const k = out.calc || {}, calcOut = {};
+  if (k.age > 0) calcOut.age = k.age;
+  if (k.income > 0) calcOut.income = k.income;
+  if (k.saved > 0) calcOut.saved = k.saved;
+  return {
+    result: {
+      reply: out.reply,
+      open: PANELS.includes(none(out.open)) ? out.open : null,
+      visual: hasVisual ? { kind: v.kind, title: v.title, items: v.items, columns: v.columns, cta: none(v.cta) } : null,
+      nudge: PANELS.includes(none(out.nudge)) ? out.nudge : null,
+      calc: Object.keys(calcOut).length ? calcOut : null
+    },
+    log
+  };
+}
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'POST only' });
   const ip = (req.headers['x-forwarded-for'] || '').split(',')[0].trim() || 'unknown';
@@ -83,50 +135,9 @@ export default async function handler(req, res) {
     .map(m => ({ role: m.role, content: m.content.slice(0, 1200) }));
   while (messages.length && messages[0].role !== 'user') messages.shift();
   if (!messages.length || messages[messages.length - 1].role !== 'user') return res.status(400).json({ error: 'No question' });
-
   const topic = PANELS.includes(body.topic) || body.topic === 'gen' ? body.topic : null;
-  const c = body.calc && typeof body.calc === 'object' ? body.calc : null;
-  const context = [
-    topic ? `The visitor is currently exploring "${LABELS[topic]}". Keep answers about that topic unless they clearly change subject.` : '',
-    topic === 'me' && c ? `The visualizer currently shows: age ${+c.age || 0}, monthly take-home ₹${+c.income || 0}, total wealth ₹${+c.saved || 0}.` : ''
-  ].join(' ');
 
-  const system = [
-    { type: 'text', text: PROMPT.replace('{{ICONS}}', ICONS.join(', ')).replace('{{CONTEXT}}', '') + '\n\n' + FORMAT_NOTE + '\n\nReference facts about Buttr:\n' + KNOWLEDGE, cache_control: { type: 'ephemeral' } },
-    { type: 'text', text: context || 'The visitor is on the home screen.' }
-  ];
-  const textOf = r => (r.content.find(b => b.type === 'text') || {}).text || '';
-  try {
-    let out;
-    try {
-      // Preferred: the answer is guaranteed to match the shape the page draws.
-      const r = await claude().messages.create({ model: MODEL, max_tokens: 1000, system, messages, output_config: { format: { type: 'json_schema', schema: SCHEMA } } });
-      out = JSON.parse(textOf(r));
-    } catch (e) {
-      if (e && (e.status === 401 || e.status === 403)) throw e;
-      console.error('structured answer failed, retrying plain', describeError(e));
-      // Fallback: ask for the same JSON in plain text and read it out.
-      const r = await claude().messages.create({ model: MODEL, max_tokens: 1000, system, messages });
-      const t = textOf(r), a = t.indexOf('{'), b = t.lastIndexOf('}');
-      out = a >= 0 ? JSON.parse(t.slice(a, b + 1)) : { reply: t };
-    }
-    const none = v => (v && v !== 'none' ? v : null);
-    const v = out.visual || {};
-    const hasVisual = v.kind && v.kind !== 'none' && ((v.items || []).length || (v.columns || []).length);
-    const calc = out.calc || {};
-    const calcOut = {};
-    if (calc.age > 0) calcOut.age = calc.age;
-    if (calc.income > 0) calcOut.income = calc.income;
-    if (calc.saved > 0) calcOut.saved = calc.saved;
-    return res.status(200).json({
-      reply: out.reply || FALLBACK.reply,
-      open: none(out.open),
-      visual: hasVisual ? { kind: v.kind, title: v.title, items: v.items, columns: v.columns, cta: none(v.cta) } : null,
-      nudge: none(out.nudge),
-      calc: Object.keys(calcOut).length ? calcOut : null
-    });
-  } catch (e) {
-    console.error('ask failed', describeError(e));
-    return res.status(200).json(FALLBACK);
-  }
+  const { result, log } = await answer({ messages, topic, calc: body.calc });
+  console.log('ask', JSON.stringify(log));
+  return res.status(200).json(result);
 }

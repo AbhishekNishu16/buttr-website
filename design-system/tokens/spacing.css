@@ -1,0 +1,5 @@
+:root{
+--space-xxs:4px;--space-xs:8px;--space-sm:12px;--space-md:16px;--space-lg:24px;--space-xl:32px;--space-xxl:48px;--space-3xl:64px;--space-section:96px;
+--container-max:1200px;--container-gutter:32px;--control-height:40px;--control-height-sm:32px;--nav-height:64px;
+--pad-card:var(--space-xl);--pad-card-tight:var(--space-lg);--pad-band:var(--space-section);--pad-cta:var(--space-3xl);
+}

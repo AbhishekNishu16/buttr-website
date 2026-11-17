@@ -1,0 +1,22 @@
+:root{
+--text-display-xl:64px;--text-display-lg:48px;--text-display-md:36px;--text-display-sm:28px;
+--text-title-lg:22px;--text-title-md:18px;--text-title-sm:16px;
+--text-body-md:16px;--text-body-sm:14px;--text-caption-size:13px;--text-overline-size:12px;--text-code:14px;
+--weight-display-light:300;--weight-display:400;--weight-display-emph:500;--weight-body:400;--weight-label:600;
+--leading-display-xl:1.05;--leading-display-lg:1.1;--leading-display-md:1.15;--leading-display-sm:1.2;--leading-title:1.35;--leading-body:1.55;--leading-code:1.6;
+--tracking-display-xl:-1.5px;--tracking-display-lg:-1px;--tracking-display-md:-0.5px;--tracking-display-sm:-0.3px;--tracking-flat:0;--tracking-overline:1.5px;
+--type-display-xl:var(--weight-display-light) var(--text-display-xl)/var(--leading-display-xl) var(--font-display);
+--type-display-lg:var(--weight-display-light) var(--text-display-lg)/var(--leading-display-lg) var(--font-display);
+--type-display-md:var(--weight-display) var(--text-display-md)/var(--leading-display-md) var(--font-display);
+--type-display-sm:var(--weight-display) var(--text-display-sm)/var(--leading-display-sm) var(--font-display);
+--type-title-lg:var(--weight-label) var(--text-title-lg)/var(--leading-title) var(--font-body);
+--type-title-md:var(--weight-label) var(--text-title-md)/var(--leading-title) var(--font-body);
+--type-title-sm:var(--weight-label) var(--text-title-sm)/var(--leading-title) var(--font-body);
+--type-body-md:var(--weight-body) var(--text-body-md)/var(--leading-body) var(--font-body);
+--type-body-sm:var(--weight-body) var(--text-body-sm)/var(--leading-body) var(--font-body);
+--type-caption:var(--weight-label) var(--text-caption-size)/1.4 var(--font-body);
+--type-overline:var(--weight-label) var(--text-overline-size)/1.4 var(--font-body);
+--type-button:var(--weight-label) var(--text-body-sm)/1 var(--font-body);
+--type-nav:var(--weight-label) var(--text-body-sm)/1.4 var(--font-body);
+--type-code:var(--weight-body) var(--text-code)/var(--leading-code) var(--font-mono);
+}

@@ -1,0 +1,18 @@
+@import url("https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,300..700;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap");
+/* DISPLAY: Canela Deck Trial (Commercial Type) — trial licence, supplied by the brand owner.
+   All twelve cuts are in fonts/. The system only uses Thin/Light/Regular/Medium;
+   Bold and Black are loaded for completeness but must not be used on display type. */
+@font-face{font-family:"Canela Deck Trial";src:url("../fonts/CanelaDeck-Thin-Trial.otf") format("opentype");font-weight:100;font-style:normal;font-display:swap}
+@font-face{font-family:"Canela Deck Trial";src:url("../fonts/CanelaDeck-ThinItalic-Trial.otf") format("opentype");font-weight:100;font-style:italic;font-display:swap}
+@font-face{font-family:"Canela Deck Trial";src:url("../fonts/CanelaDeck-Light-Trial.otf") format("opentype");font-weight:300;font-style:normal;font-display:swap}
+@font-face{font-family:"Canela Deck Trial";src:url("../fonts/CanelaDeck-LightItalic-Trial.otf") format("opentype");font-weight:300;font-style:italic;font-display:swap}
+@font-face{font-family:"Canela Deck Trial";src:url("../fonts/CanelaDeck-Regular-Trial.otf") format("opentype");font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:"Canela Deck Trial";src:url("../fonts/CanelaDeck-RegularItalic-Trial.otf") format("opentype");font-weight:400;font-style:italic;font-display:swap}
+@font-face{font-family:"Canela Deck Trial";src:url("../fonts/CanelaDeck-Medium-Trial.otf") format("opentype");font-weight:500;font-style:normal;font-display:swap}
+@font-face{font-family:"Canela Deck Trial";src:url("../fonts/CanelaDeck-MediumItalic-Trial.otf") format("opentype");font-weight:500;font-style:italic;font-display:swap}
+@font-face{font-family:"Canela Deck Trial";src:url("../fonts/CanelaDeck-Bold-Trial.otf") format("opentype");font-weight:700;font-style:normal;font-display:swap}
+@font-face{font-family:"Canela Deck Trial";src:url("../fonts/CanelaDeck-BoldItalic-Trial.otf") format("opentype");font-weight:700;font-style:italic;font-display:swap}
+@font-face{font-family:"Canela Deck Trial";src:url("../fonts/CanelaDeck-Black-Trial.otf") format("opentype");font-weight:900;font-style:normal;font-display:swap}
+@font-face{font-family:"Canela Deck Trial";src:url("../fonts/CanelaDeck-BlackItalic-Trial.otf") format("opentype");font-weight:900;font-style:italic;font-display:swap}
+/* BODY: Source Sans 3 (humanist sans) · CODE: JetBrains Mono — both from Google Fonts. */
+:root{--font-display:"Canela Deck Trial",Georgia,serif;--font-body:"Source Sans 3","Segoe UI",Helvetica,sans-serif;--font-mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace}

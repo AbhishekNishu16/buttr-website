@@ -1,0 +1,213 @@
+{
+  "$comment": "Structured output schema for /api/ask. Every property is required; unused ones are null or empty, so the schema works in strict mode.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "reply",
+    "open",
+    "blocks",
+    "cta",
+    "nudge",
+    "calc"
+  ],
+  "properties": {
+    "reply": {
+      "type": "string",
+      "description": "What Buttr says in the chat. Under 60 words, plain and warm, no markdown. When blocks or a panel are shown, point to them instead of repeating them."
+    },
+    "open": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "enum": [
+        "what",
+        "experience",
+        "help",
+        "me",
+        "cost",
+        "meeting",
+        "trial",
+        "process",
+        "blueprint",
+        null
+      ],
+      "description": "Open a hand made answer when the question clearly matches one. Otherwise null."
+    },
+    "blocks": {
+      "type": "array",
+      "description": "The visual answer, in order. Empty when open is set or a reply alone is enough. Usually 2 to 4 blocks.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "kind",
+          "title",
+          "text",
+          "items",
+          "columns"
+        ],
+        "properties": {
+          "kind": {
+            "type": "string",
+            "enum": [
+              "headline",
+              "stat",
+              "stats",
+              "cards",
+              "steps",
+              "compare",
+              "timeline",
+              "bars",
+              "donut",
+              "quote",
+              "checklist",
+              "callout"
+            ]
+          },
+          "title": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Short title, under 6 words."
+          },
+          "text": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "For headline, quote and callout. Under 30 words."
+          },
+          "items": {
+            "type": "array",
+            "description": "For stat, stats, cards, steps, timeline, bars, donut and checklist.",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "icon",
+                "label",
+                "value",
+                "note"
+              ],
+              "properties": {
+                "icon": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "description": "A Lucide icon name from the allowed list."
+                },
+                "label": {
+                  "type": "string",
+                  "description": "Under 6 words."
+                },
+                "value": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "description": "A figure, with ₹, lakh, crore or % as needed."
+                },
+                "note": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "description": "Under 20 words."
+                }
+              }
+            }
+          },
+          "columns": {
+            "type": "array",
+            "description": "For compare only.",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "title",
+                "points"
+              ],
+              "properties": {
+                "title": {
+                  "type": "string"
+                },
+                "points": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "cta": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "enum": [
+        "meeting",
+        "trial",
+        "blueprint",
+        null
+      ],
+      "description": "The button to show under the reply."
+    },
+    "nudge": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "enum": [
+        "what",
+        "experience",
+        "help",
+        "me",
+        "cost",
+        "process",
+        "blueprint",
+        null
+      ],
+      "description": "The nearest hand made answer to suggest next."
+    },
+    "calc": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": false,
+      "required": [
+        "age",
+        "monthly_income",
+        "total_wealth"
+      ],
+      "description": "Only numbers the visitor stated, to prefill the calculator. Rupees.",
+      "properties": {
+        "age": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "monthly_income": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "total_wealth": {
+          "type": [
+            "number",
+            "null"
+          ]
+        }
+      }
+    }
+  }
+}

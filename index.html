@@ -97,7 +97,7 @@
 </style>
 </helmet>
 
-<div data-site="{{ theme }}" style="position:fixed; inset:0; overflow:hidden; background:var(--bgsolid); color:var(--tx);">
+<div data-site="{{ theme }}" style="position:fixed; inset:0; overflow:hidden; background:var(--bgsolid); color:var(--tx); zoom:{{ uiZoom }};">
   <canvas ref="{{ shaderRef }}" style="position:absolute; inset:0; width:100%; height:100%; display:block;"></canvas>
 
   <div style="{{ shellStyle }}">
@@ -1265,7 +1265,8 @@ class Component extends DCLogic {
     }, 1200);
     if (!window.BUTTR_IMG) { const w = setInterval(() => { if (window.BUTTR_IMG) { clearInterval(w); this.forceUpdate(); } }, 150); this._t.push(setTimeout(() => clearInterval(w), 15000)); }
     this._ringI = setInterval(() => { const st = this.state; if (st.panel !== 'team' || document.hidden || Date.now() < (this._ringHold || 0)) return; this.setState({ ringIdx: (st.ringIdx || 0) + 1 }); }, 4200);
-    this._rs = () => this.setState({ vw: window.innerWidth, vh: window.innerHeight });
+    // Laptop screens: scale the whole interface down a little so it keeps the proportions it has on larger screens.
+    this._rs = () => { const W = window.innerWidth, H = window.innerHeight, k = W < 760 ? 1 : Math.max(.8, Math.min(1, H / 880, W / 1400)); this.setState({ uiK: k, vw: W / k, vh: H / k }); };
     window.addEventListener('resize', this._rs); this._rs();
     try { speechSynthesis.getVoices(); speechSynthesis.onvoiceschanged = () => { this._voice = null; }; } catch (e) {}
     this.icons();
@@ -1678,6 +1679,7 @@ Return ONLY a JSON object: {"reply": string, "open": an experience key or null (
       logoMarkDark: light ? 'display:none;' : `position:absolute; left:0; top:0; width:${281 * k}px; height:${LH}px; transform-origin:${140 * k}px ${LH / 2}px; opacity:${I === 1 ? 1 : 0}; transform:scale(${I >= 1 ? 1 : .7}); transition:opacity ${I >= 2 ? 320 : 600}ms ease, transform 700ms cubic-bezier(.16,1,.3,1);`,
       logoMarkLight: light ? `position:absolute; left:0; top:0; width:${281 * k}px; height:${LH}px; transform-origin:${140 * k}px ${LH / 2}px; opacity:${I === 1 ? 1 : 0}; transform:scale(${I >= 1 ? 1 : .7}); transition:opacity ${I >= 2 ? 320 : 600}ms ease, transform 700ms cubic-bezier(.16,1,.3,1);` : 'display:none;',
       onLogo: () => { if (I >= 7) this.reset(); },
+      uiZoom: (s.uiK || 1).toFixed(3),
       ctaLabel: s.vw < 760 ? 'Get a partner' : 'Meet a partner', notMobile: s.vw >= 760,
       openMeeting: () => this.startTopic('meeting'),
       openTrial: () => this.startTopic('trial'),

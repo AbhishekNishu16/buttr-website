@@ -1,12 +1,11 @@
 // POST /api/ask: answers a visitor's question as Buttr, in the shape the page renders.
-import Anthropic from '@anthropic-ai/sdk';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { PROMPT, ICONS } from './_prompt.js';
+import { MODEL, claude, describeError } from './_claude.js';
 
-const MODEL = process.env.BUTTR_MODEL || 'claude-sonnet-5-5';
-const KNOWLEDGE = readFileSync(join(process.cwd(), 'content', 'buttr_knowledge.md'), 'utf8');
-const client = new Anthropic(); // reads ANTHROPIC_API_KEY
+let KNOWLEDGE = '';
+try { KNOWLEDGE = readFileSync(join(process.cwd(), 'content', 'buttr_knowledge.md'), 'utf8'); } catch (e) { console.error('knowledge file missing', e.message); }
 
 const PANELS = ['what', 'experience', 'help', 'me', 'cost', 'meeting', 'trial', 'process', 'blueprint'];
 const LABELS = { what: 'What is Buttr', experience: 'The Buttr experience', help: 'How Buttr helps people', me: 'What Buttr can do for you', cost: 'What it costs', meeting: 'Meet a partner', trial: 'Pocket Buttr', process: 'How Buttr works', blueprint: 'The Blueprint', gen: 'a generated answer' };
@@ -92,19 +91,25 @@ export default async function handler(req, res) {
     topic === 'me' && c ? `The visualizer currently shows: age ${+c.age || 0}, monthly take-home ₹${+c.income || 0}, total wealth ₹${+c.saved || 0}.` : ''
   ].join(' ');
 
+  const system = [
+    { type: 'text', text: PROMPT.replace('{{ICONS}}', ICONS.join(', ')).replace('{{CONTEXT}}', '') + '\n\n' + FORMAT_NOTE + '\n\nReference facts about Buttr:\n' + KNOWLEDGE, cache_control: { type: 'ephemeral' } },
+    { type: 'text', text: context || 'The visitor is on the home screen.' }
+  ];
+  const textOf = r => (r.content.find(b => b.type === 'text') || {}).text || '';
   try {
-    const r = await client.messages.create({
-      model: MODEL,
-      max_tokens: 1000,
-      system: [
-        { type: 'text', text: PROMPT.replace('{{ICONS}}', ICONS.join(', ')).replace('{{CONTEXT}}', '') + '\n\n' + FORMAT_NOTE + '\n\nReference facts about Buttr:\n' + KNOWLEDGE, cache_control: { type: 'ephemeral' } },
-        { type: 'text', text: context || 'The visitor is on the home screen.' }
-      ],
-      messages,
-      output_config: { format: { type: 'json_schema', schema: SCHEMA } }
-    });
-    const text = (r.content.find(b => b.type === 'text') || {}).text || '';
-    const out = JSON.parse(text);
+    let out;
+    try {
+      // Preferred: the answer is guaranteed to match the shape the page draws.
+      const r = await claude().messages.create({ model: MODEL, max_tokens: 1000, system, messages, output_config: { format: { type: 'json_schema', schema: SCHEMA } } });
+      out = JSON.parse(textOf(r));
+    } catch (e) {
+      if (e && (e.status === 401 || e.status === 403)) throw e;
+      console.error('structured answer failed, retrying plain', describeError(e));
+      // Fallback: ask for the same JSON in plain text and read it out.
+      const r = await claude().messages.create({ model: MODEL, max_tokens: 1000, system, messages });
+      const t = textOf(r), a = t.indexOf('{'), b = t.lastIndexOf('}');
+      out = a >= 0 ? JSON.parse(t.slice(a, b + 1)) : { reply: t };
+    }
     const none = v => (v && v !== 'none' ? v : null);
     const v = out.visual || {};
     const hasVisual = v.kind && v.kind !== 'none' && ((v.items || []).length || (v.columns || []).length);
@@ -114,14 +119,14 @@ export default async function handler(req, res) {
     if (calc.income > 0) calcOut.income = calc.income;
     if (calc.saved > 0) calcOut.saved = calc.saved;
     return res.status(200).json({
-      reply: out.reply,
+      reply: out.reply || FALLBACK.reply,
       open: none(out.open),
       visual: hasVisual ? { kind: v.kind, title: v.title, items: v.items, columns: v.columns, cta: none(v.cta) } : null,
       nudge: none(out.nudge),
       calc: Object.keys(calcOut).length ? calcOut : null
     });
   } catch (e) {
-    console.error('ask failed', e && e.message);
+    console.error('ask failed', describeError(e));
     return res.status(200).json(FALLBACK);
   }
 }

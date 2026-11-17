@@ -5,7 +5,7 @@ import { extname, join, normalize } from 'node:path';
 
 const root = process.cwd();
 const types = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.png': 'image/png', '.otf': 'font/otf', '.json': 'application/json', '.md': 'text/markdown' };
-const api = { '/api/ask': (await import('../api/ask.js')).default, '/api/lead': (await import('../api/lead.js')).default };
+const api = { '/api/ask': (await import('../api/ask.js')).default, '/api/lead': (await import('../api/lead.js')).default, '/api/health': (await import('../api/health.js')).default };
 
 http.createServer(async (req, res) => {
   const url = new URL(req.url, 'http://x');

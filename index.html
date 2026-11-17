@@ -1448,7 +1448,12 @@ class Component extends DCLogic {
     const topicLine = s.topic ? 'The visitor is currently exploring "' + this.panelMeta[s.topic].label + '". Keep answers about that topic unless they clearly change subject.' : '';
     const calcLine = s.topic === 'me' ? 'The visualizer currently shows: age ' + s.cAge + ', monthly take-home ₹' + s.cIncome + ', total wealth ₹' + s.cSaved + '.' : '';
     const system = `You are Buttr, speaking to a visitor on Buttr's website. The website is itself the demo: a short question-and-answer experience, not a long chat.
-Voice: calm, plain, warm, confident. Short sentences. No hype, exclamation marks, emoji, markdown or lists. Under 60 words; replies may be read aloud. Use ₹, lakh and crore.
+Voice: speak as Buttr, using "I" and "we", like a thoughtful senior adviser at a family office talking to a successful professional. Warm, calm and assured; never salesy, never robotic.
+- Engage with what they actually asked in your first sentence. No preamble, no "great question", no opening caveat.
+- Give one genuinely useful insight they can take away: a rule of thumb, a trade off, or an India specific point (tax, home loans, insurance, EPF, markets). They should learn something even if they never meet us.
+- Write in natural, flowing sentences of varied length that read well aloud. No clipped fragments, no hype, no exclamation marks, emoji, markdown or lists.
+- 40 to 80 words. Use ₹, lakh and crore.
+- Bring in a wealth partner only when the answer truly depends on their own numbers or family, and phrase it as a warm offer, never a sales line.
 
 What Buttr is (from the Buttr Plan and MVP brief):
 - The mission is wealthelp: making financial guidance free, simple and always available. A specialist in holistic financial wellbeing. Like a friendly family doctor for financial wellness. A service, not an app.
@@ -1631,7 +1636,7 @@ Return ONLY a JSON object: {"reply": string, "open": an experience key or null (
     const kStage = kAge < 40 ? 0 : kAge < 50 ? 1 : kAge < 60 ? 2 : 3;
     const seg = on => `height:42px; padding:0 15px; border-radius:13px; display:flex; flex-direction:column; align-items:center; justify-content:center; font-size:16px; cursor:pointer; flex-shrink:0; white-space:nowrap; transition:all 160ms ease; border:1px solid ${on ? 'var(--acc)' : 'var(--ln)'}; background:${on ? 'var(--acc)' : 'transparent'}; color:${on ? 'var(--accfg)' : 'var(--tx2)'}; font-weight:${on ? 700 : 400};`;
     const roundBtn = on => `width:42px; height:42px; box-sizing:border-box; border-radius:14px; border:1px solid var(--ln); display:flex; align-items:center; justify-content:center; flex-shrink:0; cursor:${on ? 'pointer' : 'default'}; color:var(--tx2); opacity:${on ? 1 : .35};`;
-    const gold = ok => `height:52px; border-radius:16px; display:flex; align-items:center; justify-content:center; gap:9px; font-size:17px; font-weight:700; color:var(--ctafg); cursor:pointer; background:var(--ctabg); border:1px solid var(--ctaln); opacity:${ok ? 1 : .5};`;
+    const gold = ok => `height:52px; padding:0 28px; box-sizing:border-box; min-width:${mobile ? '100%' : '240px'}; border-radius:16px; display:flex; align-items:center; justify-content:center; gap:9px; font-size:17px; font-weight:700; color:var(--ctafg); cursor:pointer; background:var(--ctabg); border:1px solid var(--ctaln); opacity:${ok ? 1 : .5};`;
     const EH = s.expH || 700, xs = mobile || !(s.expW > 0) || s.expW < 860; this._xs = xs; const expI = s.expIdx || 0, expKeys = ['chat', 'home', 'actions'], nar = this.narr[expKeys[expI]];
     const track = (v, a, b) => { const p = ((v - a) / (b - a) * 100).toFixed(1); return `width:100%; margin-top:14px; background:linear-gradient(90deg, var(--vz1), var(--viz) ${p}%, var(--chip) ${p}%);`; };
     const pill = on => `height:38px; padding:0 16px; border-radius:12px; display:flex; align-items:center; font-size:16px; cursor:pointer; transition:all 160ms ease; ${on ? 'background:var(--acc); color:var(--accfg); font-weight:700; box-shadow:0 6px 14px -6px rgba(62,39,35,.45);' : 'color:var(--tx2);'}`;

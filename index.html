@@ -678,7 +678,7 @@
                     <div style="position:relative; width:48px; height:48px; flex-shrink:0; border-radius:50%;"><div style="position:absolute; inset:0; border-radius:50%; background:var(--avbg); color:var(--avfg); display:flex; align-items:center; justify-content:center; font-family:'Fauna One',serif; font-size:18px;">R</div><img src="{{ img.rhea }}" alt="Wealth partner" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center 25%; border-radius:50%; display:block;"></div>
                     <div style="flex:1; min-width:180px;">
                       <div style="font-size:17px; font-weight:700;">Leave with your Blueprint</div>
-                      <div style="font-size:15px; color:var(--tx2); margin-top:2px;">45 minutes, all about you. No products, no pitch.</div>
+                      <div style="font-size:15px; color:var(--tx2); margin-top:2px;">30 minutes, all about you. No products, no pitch.</div>
                     </div>
                     <div onClick="{{ openBlueprint }}" style="display:flex; align-items:center; gap:6px; font-size:15.5px; font-weight:700; color:var(--acctx); cursor:pointer; white-space:nowrap;">See a sample <i data-lucide="arrow-right" style="width:15px; height:15px;"></i></div>
                   </div>
@@ -805,7 +805,7 @@
                 <div style="flex:1; min-width:200px;">
                   <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;"><div style="font-size:12px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; padding:3px 9px; border-radius:999px; background:var(--tint); color:var(--acctx);">SAMPLE BLUEPRINT&nbsp;</div></div>
                   <div style="font-family:'Canela Deck Trial',serif; font-weight:300; font-size:36px; letter-spacing:-.02em; margin-top:6px; line-height:1.1;">Nandini’s Blueprint</div>
-                  <div style="display:flex; align-items:center; gap:8px; margin-top:6px;"><div style="position:relative; width:26px; height:26px; flex-shrink:0; border-radius:50%;"><div style="position:absolute; inset:0; border-radius:50%; background:var(--avbg); color:var(--avfg); display:flex; align-items:center; justify-content:center; font-family:'Fauna One',serif; font-size:9px;">R</div><img src="{{ img.rhea }}" alt="Rhea" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center 25%; border-radius:50%; display:block;"></div><div style="font-size:15px; color:var(--tx2);">Built with Rhea, her wealth partner, in one 45 minute meeting</div></div>
+                  <div style="display:flex; align-items:center; gap:8px; margin-top:6px;"><div style="position:relative; width:26px; height:26px; flex-shrink:0; border-radius:50%;"><div style="position:absolute; inset:0; border-radius:50%; background:var(--avbg); color:var(--avfg); display:flex; align-items:center; justify-content:center; font-family:'Fauna One',serif; font-size:9px;">R</div><img src="{{ img.rhea }}" alt="Rhea" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center 25%; border-radius:50%; display:block;"></div><div style="font-size:15px; color:var(--tx2);">Built with Rhea, her wealth partner, in one 30 minute meeting</div></div>
                 </div>
                 <div style="display:flex; align-items:center; gap:14px; flex-shrink:0;">
                   <div style="position:relative; width:96px; height:96px; flex-shrink:0;">
@@ -1167,7 +1167,7 @@ class Component extends DCLogic {
   welcomeLines = ['Hey, I’m Buttr! I work closely with all our wealth partners and customers. Think of me as your guide to all things at Buttr. Here’s a little about us to get started.'];
   welcomeDur = [7600];
   procSteps = [
-    ['messages-square', 'Understand you', 'A conversation first: what you’re working towards, and what keeps you up at night.', 'Wealth partner', ['45 minutes, by video, phone or in person', 'Your goals, your worries, your family', 'No products, no pitch']],
+    ['messages-square', 'Understand you', 'A conversation first: what you’re working towards, and what keeps you up at night.', 'Wealth partner', ['30 minutes, by video, phone or in person', 'Your goals, your worries, your family', 'No products, no pitch']],
     ['link', 'Connect finances', 'With your consent, Account Aggregator brings everything together in about 15 seconds.', 'Buttr', ['Banks, funds, stocks, EPF and insurance', 'Read-only, and only with your consent', 'Ready in about 15 seconds']],
     ['scroll-text', 'Build your Blueprint', 'Every layer of your financial life: what’s working, what’s missing, what’s possible.', 'Buttr + partner', ['Your Financial Health Score', 'Gaps, risks and opportunity cost', 'Where your next rupee should go']],
     ['route', 'Meet your new wealth partner', 'Clear next steps, post-tax, with the risk shown beside every return.', 'You + partner', ['Every number shown post-tax', 'Risk shown beside every return', 'Nothing moves without your approval']],

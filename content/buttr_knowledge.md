@@ -54,7 +54,7 @@ What Buttr's website assistant may draw on when answering visitors. Everything h
 
 ## How it works
 
-1. **A first conversation.** Usually 45 minutes, by video, phone or in person, whichever you prefer. Your wealth partner asks what you are working towards and what keeps you up at night. No products, no pitch.
+1. **A first conversation.** About 30 minutes, by video, phone or in person, whichever you prefer. Your wealth partner asks what you are working towards and what keeps you up at night. No products, no pitch.
 2. **See it working first.** Before you are asked for anything, you see how Buttr serves someone like you. At the end of the conversation, Buttr plays back what it understood, your life in your own words, and what it will hold your partner to.
 3. **Connect, only if you choose.** With your consent, India's Account Aggregator framework brings your bank accounts, funds, stocks, provident fund and insurance together in about 15 seconds. Access is read only, and you can withdraw consent at any time.
 4. **Your Blueprint.** Walked through with your partner, never just sent as a file. It opens with where you stand in plain words, then what is already working (and most people have done better than they think), then no more than five findings in rupees, what is possible, three actions, the gaps we can't see yet, and exactly what Buttr would earn. It ends with a question: which of the three should we do first?
@@ -111,5 +111,5 @@ For people not ready to sign up. A lighter way to keep Buttr AI with you: it hol
 ## The team
 
 * **Ajay Srinivasan, Co founder and CEO.** 35 years in financial services. Founding CEO of Aditya Birla Capital, founding CEO of Prudential ICICI AMC (now ICICI Prudential AMC), and founding CEO of Prudential's Asia fund management business (now Eastspring Investments). IIM Ahmedabad alumnus.
-* **Abhishek Nishu, Co founder, Product and Experience.** Leads how Buttr looks, feels and listens, from the first hello to every check in.
+* **Abhishek Nishu, Co founder, Product and Experience.** Formerly at Amazon. Leads how Buttr looks, feels and listens, from the first hello to every check in.
 * **Wealth partners:** human finance experts employed by Buttr, trained continuously, including practice on the hardest conversations, and taught one rule above all: never invent an answer. If they don't know, they check with specialists and come back within 24 hours.

@@ -1393,6 +1393,8 @@ class Component extends DCLogic {
 
   match(t) {
     const s = t.toLowerCase().trim();
+    // Real questions (comparisons, reasons, "should I", longer questions) go to Buttr AI, which can still open a panel itself.
+    if (/\b(differ\w*|compar\w*|versus|vs|better than|instead of|why|should (i|we)|can (i|we)|would|what if|how much|worth it|trust|my (bank|banker|adviser|advisor|rm|relationship manager|ca|planner))\b/.test(s) || s.split(/\s+/).length > 9) return null;
     if (/blueprint/.test(s)) return 'blueprint';
     if (/\b(team|founders?|ajay|abhishek|your rms?|relationship managers?|who works|people behind)\b/.test(s)) return 'team';
     if (/how does (buttr|it) work|the process|how it works|what happens (first|next)|steps/.test(s)) return 'process';

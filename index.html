@@ -1008,7 +1008,7 @@
             <canvas ref="{{ sphereRef }}" width="680" height="680" style="width:100%; height:100%; display:block;"></canvas>
           </div>
           <sc-if value="{{ showWelcome }}" hint-placeholder-val="{{ false }}">
-            <div style="{{ welcomeBoxStyle }}"><div style="{{ welcomeStyle }}"><sc-for list="{{ welcomeRoll }}" as="wl" hint-placeholder-count="4"><div style="{{ wl.style }}">{{ wl.t }}</div></sc-for></div></div>
+            <div style="{{ welcomeBoxStyle }}"><div style="{{ welcomeStyle }}"><sc-for list="{{ welcomeRoll }}" as="wl" hint-placeholder-count="4"><div style="{{ wl.style }}"><sc-for list="{{ wl.words }}" as="ww" hint-placeholder-count="6"><span style="{{ ww.style }}">{{ ww.t }}</span></sc-for></div></sc-for></div></div>
           </sc-if>
           <sc-if value="{{ showCaption }}" hint-placeholder-val="{{ false }}">
             <div style="text-align:center; margin-top:18px; max-width:640px; display:flex; flex-direction:column; align-items:center; gap:12px;">
@@ -1173,7 +1173,7 @@ class Component extends DCLogic {
   };
   nudgeLabels = { what: 'See what Buttr is', experience: 'Try the Buttr app', help: 'See how Buttr helps people', me: 'See where you stand', cost: 'See what it costs', meeting: 'Meet a partner', trial: 'Try Pocket Buttr', process: 'See how it works', blueprint: 'See a sample Blueprint' };
   welcomeLines = ['Hey, I’m Buttr!', 'I work closely with all our wealth partners and customers.', 'Think of me as your guide to all things at Buttr.', 'Here’s a little about us to get started.'];
-  welcomeDur = [2200, 3000, 2900, 2800];
+  welcomeDur = [2600, 3600, 3500, 3300];
   procSteps = [
     ['messages-square', 'Understand you', 'A conversation first: what you’re working towards, and what keeps you up at night.', 'Wealth partner', ['30 minutes, by video, phone or in person', 'Your goals, your worries, your family', 'No products, no pitch']],
     ['link', 'Connect finances', 'With your consent, Account Aggregator brings everything together in about 15 seconds.', 'Buttr', ['Banks, funds, stocks, EPF and insurance', 'Read-only, and only with your consent', 'Ready in about 15 seconds']],
@@ -2135,7 +2135,8 @@ Return ONLY a JSON object: {"reply": string, "open": an experience key or null (
       showWelcome: I === 6 && s.welcome >= 0,
       welcomeLine: this.welcomeLines[Math.min(this.welcomeLines.length - 1, Math.max(0, s.welcome))], welcomeKey: 'w' + s.welcome,
       welcomeRoll: this.welcomeLines.map((t, i) => { const d = i - s.welcome;
-        return { t, style: `grid-area:1 / 1; align-self:start; text-wrap:balance; will-change:transform, opacity; transform-origin:50% 50%; backface-visibility:hidden; transition:transform 560ms cubic-bezier(.55,0,.25,1), opacity 460ms cubic-bezier(.4,0,.2,1); ${d === 0 ? 'opacity:1; transform:translateY(0) rotateX(0deg);' : d < 0 ? 'opacity:0; transform:translateY(-62%) rotateX(72deg);' : 'opacity:0; transform:translateY(62%) rotateX(-72deg);'}` }; }),
+        const w = t.split(' '), per = Math.min(110, Math.max(50, (this.welcomeDur[i] * .28) / w.length));
+        return { t, words: w.map((x, k) => ({ t: x, style: d === 0 ? `display:inline-block; animation:wordIn 650ms cubic-bezier(.16,1,.3,1) ${140 + Math.round(k * per)}ms both;` : 'display:inline-block;' })), style: `grid-area:1 / 1; align-self:start; display:flex; flex-wrap:wrap; column-gap:.26em; justify-content:${mobile ? 'flex-start' : 'center'}; will-change:transform, opacity; transform-origin:50% 50%; backface-visibility:hidden; transition:transform 560ms cubic-bezier(.55,0,.25,1), opacity 460ms cubic-bezier(.4,0,.2,1); ${d === 0 ? 'opacity:1; transform:translateY(0) rotateX(0deg);' : d < 0 ? 'opacity:0; transform:translateY(-62%) rotateX(72deg);' : 'opacity:0; transform:translateY(62%) rotateX(-72deg);'}` }; }),
       welcomeBoxStyle: `position:absolute; left:0; right:0; top:100%; z-index:2; margin-top:22px; display:flex; align-items:flex-start; justify-content:${mobile ? 'flex-start' : 'center'}; text-align:${mobile ? 'left' : 'center'}; padding:0 ${mobile ? 24 : 16}px; pointer-events:none;`,
       welcomeStyle: `font-family:'Canela Deck Trial',serif; font-weight:300; font-size:${mobile ? 22 : 28}px; line-height:1.3; letter-spacing:-.015em; max-width:${mobile ? 640 : 860}px; width:100%; display:grid; perspective:900px; transform-style:preserve-3d; animation:rollIn 560ms cubic-bezier(.55,0,.25,1) both;`,
       onNewQ: () => this.reset(), showNewQ: hasMsgs && !s.thinking,
